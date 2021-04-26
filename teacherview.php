@@ -641,7 +641,8 @@ if ($students === 0) {
 
             $groupcnt = 0;
             foreach ($groupsicanschedule as $group) {
-                $members = groups_get_members($group->id, user_picture::fields('u'), 'u.lastname, u.firstname');
+                $members = groups_get_members($group->id, \core_user\fields::for_name()->get_sql('u', false, '', '', false)->selects,
+                    'u.lastname, u.firstname');
                 if (empty($members)) {
                     continue;
                 }

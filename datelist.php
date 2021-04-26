@@ -107,8 +107,8 @@ if ($scope == 'activity') {
     $scopecond = ' AND c.id = :courseid';
 }
 
-$sql = "SELECT a.id AS id, ".
-               user_picture::fields('u1', array('email', 'department'), 'studentid', 'student').", ".
+$sql = "SELECT a.id AS id, " .
+               \core_user\fields::for_userpic()->including('email', 'department')->get_sql('u1', false, 'student', 'studentid', false)->selects . ", " .
                $DB->sql_fullname('u1.firstname', 'u1.lastname')." AS studentfullname,
                a.appointmentnote,
                a.appointmentnoteformat,
@@ -119,8 +119,8 @@ $sql = "SELECT a.id AS id, ".
                sc.id AS schedulerid,
                sc.scale,
                c.shortname AS courseshort,
-               c.id AS courseid, ".
-               user_picture::fields('u2', null, 'teacherid').",
+               c.id AS courseid, " .
+               \core_user\fields::for_userpic()->get_sql('u2', false, '', 'teacherid', false)->selects . ",
                s.id AS sid,
                s.starttime,
                s.duration,

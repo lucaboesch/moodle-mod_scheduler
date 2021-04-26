@@ -136,15 +136,16 @@ Feature: Entire groups can be booked into slots at once
     And the "appointgroup" select box should not contain "Group B2"
 
     When I set the field "appointgroup" to "Group A1"
-    And I click on "Book slot" "button" in the "8:00 AM" "table_row"
-    Then I should see "8:00 AM" in the "Large office" "table_row"
+    And I click on "Book slot" "button" in the "8:00 am" "table_row"
+    Then I should see "8:00 am" in the "Large office" "table_row"
     And I log out
 
     When I log in as "edteacher1"
     And I am on "Course 1" course homepage
     And I follow "Test scheduler no grouping"
-    Then I should see "Student 1" in the "8:00 AM" "table_row"
-    And I should see "Student 2" in the "8:00 AM" "table_row"
+    Then I should see "Group A1" in the "8:00 am" "table_row"
+    And I should see "Student 1" in the "8:00 am" "table_row"
+    And I should see "Student 2" in the "8:00 am" "table_row"
     And I should see "2 students still need to make an appointment"
     And I should not see "Group A1" in the "groupstoschedule" "table"
     And I should see "Group A2" in the "groupstoschedule" "table"
