@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use \mod_scheduler\model\appointment;
-use \mod_scheduler\permission\scheduler_permissions;
+use mod_scheduler\model\appointment;
+use mod_scheduler\permission\scheduler_permissions;
 
 require_once($CFG->libdir.'/formslib.php');
 
@@ -70,9 +70,9 @@ class scheduler_editappointment_form extends moodleform {
         $this->appointment = $appointment;
         $this->distribute = $distribute;
         $this->permissions = $permissions;
-        $this->noteoptions = array('trusttext' => true, 'maxfiles' => -1, 'maxbytes' => 0,
+        $this->noteoptions = ['trusttext' => true, 'maxfiles' => -1, 'maxbytes' => 0,
                                    'context' => $permissions->get_context(),
-                                   'subdirs' => false, 'collapsed' => true);
+                                   'subdirs' => false, 'collapsed' => true, ];
         parent::__construct($action, null);
     }
 
@@ -109,7 +109,7 @@ class scheduler_editappointment_form extends moodleform {
         if ($scheduler->uses_appointmentnotes()) {
             if ($this->permissions->can_edit_notes($this->appointment)) {
                 $mform->addElement('editor', 'appointmentnote_editor', get_string('appointmentnote', 'scheduler'),
-                                   array('rows' => 3, 'columns' => 60), $this->noteoptions);
+                                   ['rows' => 3, 'columns' => 60], $this->noteoptions);
                 $mform->setType('appointmentnote', PARAM_RAW); // Must be PARAM_RAW for rich text editor content.
                 $candistribute = true;
             } else {
@@ -121,7 +121,7 @@ class scheduler_editappointment_form extends moodleform {
         if ($scheduler->uses_teachernotes()) {
             if ($this->permissions->can_edit_notes($this->appointment)) {
                 $mform->addElement('editor', 'teachernote_editor', get_string('teachernote', 'scheduler'),
-                                   array('rows' => 3, 'columns' => 60), $this->noteoptions);
+                                   ['rows' => 3, 'columns' => 60], $this->noteoptions);
                 $mform->setType('teachernote', PARAM_RAW); // Must be PARAM_RAW for rich text editor content.
                 $candistribute = true;
             } else {

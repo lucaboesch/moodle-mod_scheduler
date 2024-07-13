@@ -45,10 +45,10 @@ abstract class appointment_base extends \core\event\base {
      * @return array
      */
     protected static function base_data(\mod_scheduler\model\appointment $appointment) {
-        return array(
+        return [
             'context' => $appointment->get_parent()->get_context(),
-            'objectid' => $appointment->id
-        );
+            'objectid' => $appointment->id,
+        ];
     }
 
     /**
@@ -85,7 +85,7 @@ abstract class appointment_base extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/scheduler/view.php', array('id' => $this->contextinstanceid));
+        return new \moodle_url('/mod/scheduler/view.php', ['id' => $this->contextinstanceid]);
     }
 
     /**

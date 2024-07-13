@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use \mod_scheduler\model\scheduler;
+use mod_scheduler\model\scheduler;
 
 require_once($CFG->libdir.'/formslib.php');
 require_once($CFG->dirroot.'/mod/scheduler/exportlib.php');
@@ -65,7 +65,7 @@ class scheduler_export_form extends moodleform {
         // General introduction.
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        $radios = array();
+        $radios = [];
         $radios[] = $mform->createElement('radio', 'content', '',
                                           get_string('onelineperslot', 'scheduler'), 'onelineperslot');
         $radios[] = $mform->createElement('radio', 'content', '',
@@ -78,13 +78,13 @@ class scheduler_export_form extends moodleform {
         $mform->addHelpButton('contentgroup', 'contentformat', 'scheduler');
 
         if (has_capability('mod/scheduler:canseeotherteachersbooking', $this->scheduler->get_context())) {
-            $selopt = array('me' => get_string('myself', 'scheduler'),
-                'all' => get_string ('everyone', 'scheduler'));
+            $selopt = ['me' => get_string('myself', 'scheduler'),
+                'all' => get_string ('everyone', 'scheduler'), ];
             $mform->addElement('select', 'includewhom', get_string('includeslotsfor', 'scheduler'), $selopt);
             $mform->setDefault('includewhom', 'all');
 
-            $selopt = array('all' => get_string('allononepage', 'scheduler'),
-                'perteacher' => get_string('pageperteacher', 'scheduler', $this->scheduler->get_teacher_name()) );
+            $selopt = ['all' => get_string('allononepage', 'scheduler'),
+                'perteacher' => get_string('pageperteacher', 'scheduler', $this->scheduler->get_teacher_name()), ];
             $mform->addElement('select', 'paging', get_string('pagination', 'scheduler'),  $selopt);
             $mform->addHelpButton('paging', 'pagination', 'scheduler');
 
@@ -93,7 +93,7 @@ class scheduler_export_form extends moodleform {
         $timeoptions = [
                 0 => get_string('exporttimerangeall', 'scheduler'),
                 1 => get_string('exporttimerangefuture', 'scheduler'),
-                2 => get_string('exporttimerangepast', 'scheduler')
+                2 => get_string('exporttimerangepast', 'scheduler'),
         ];
         $mform->addElement('select', 'timerange', get_string('exporttimerange', 'scheduler'), $timeoptions);
         $mform->setDefault('timerange', 0);
@@ -120,7 +120,7 @@ class scheduler_export_form extends moodleform {
         $mform->addElement('header', 'fileformathdr', get_string('fileformat', 'scheduler'));
         $mform->addHelpButton('fileformathdr', 'fileformat', 'scheduler');
 
-        $radios = array();
+        $radios = [];
         $radios[] = $mform->createElement('radio', 'outputformat', '', get_string('csvformat', 'scheduler'), 'csv');
         $radios[] = $mform->createElement('radio', 'outputformat', '', get_string('excelformat', 'scheduler'),  'xls');
         $radios[] = $mform->createElement('radio', 'outputformat', '', get_string('odsformat', 'scheduler'), 'ods');
@@ -129,24 +129,24 @@ class scheduler_export_form extends moodleform {
         $mform->addGroup($radios, 'outputformatgroup', get_string('fileformat', 'scheduler'), null, false);
         $mform->setDefault('outputformat', 'csv');
 
-        $selopt = array('comma'     => get_string('sepcomma', 'scheduler'),
+        $selopt = ['comma'     => get_string('sepcomma', 'scheduler'),
                         'colon'     => get_string('sepcolon', 'scheduler'),
                         'semicolon' => get_string('sepsemicolon', 'scheduler'),
-                        'tab'       => get_string('septab', 'scheduler'));
+                        'tab'       => get_string('septab', 'scheduler'), ];
         $mform->addElement('select', 'csvseparator', get_string('csvfieldseparator', 'scheduler'),  $selopt);
         $mform->setDefault('csvseparator', 'comma');
         $mform->disabledIf('csvseparator', 'outputformat', 'neq', 'csv');
 
-        $selopt = array('P' => get_string('portrait', 'scheduler'),
-                        'L' => get_string('landscape', 'scheduler'));
+        $selopt = ['P' => get_string('portrait', 'scheduler'),
+                        'L' => get_string('landscape', 'scheduler'), ];
         $mform->addElement('select', 'pdforientation', get_string('pdforientation', 'scheduler'),  $selopt);
         $mform->disabledIf('pdforientation', 'outputformat', 'neq', 'pdf');
 
-        $buttonarray = array();
+        $buttonarray = [];
         $buttonarray[] = $mform->createElement('submit', 'preview', get_string('preview', 'scheduler'));
         $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('createexport', 'scheduler'));
         $buttonarray[] = $mform->createElement('cancel');
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
         $mform->closeHeaderBefore('buttonar');
 
     }
@@ -161,7 +161,7 @@ class scheduler_export_form extends moodleform {
 
         $mform = $this->_form;
         $fields = scheduler_get_export_fields($this->scheduler);
-        $checkboxes = array();
+        $checkboxes = [];
 
         foreach ($fields as $field) {
             if ($field->get_group() == $groupid && $field->is_available($this->scheduler)) {

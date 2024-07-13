@@ -48,9 +48,9 @@ function scheduler_migrate_groupmode($sid) {
         } else {
             $g = -1;
         }
-        $DB->set_field('scheduler', 'bookingrouping', $g, array('id' => $sid));
-        $DB->set_field('course_modules', 'groupmode', 0, array('id' => $cm->id));
-        $DB->set_field('course_modules', 'groupingid', 0, array('id' => $cm->id));
+        $DB->set_field('scheduler', 'bookingrouping', $g, ['id' => $sid]);
+        $DB->set_field('course_modules', 'groupmode', 0, ['id' => $cm->id]);
+        $DB->set_field('course_modules', 'groupingid', 0, ['id' => $cm->id]);
     }
 }
 
@@ -106,7 +106,7 @@ function xmldb_scheduler_upgrade($oldversion=0) {
 
         // Conditionally migrate to html format in intro.
         if ($CFG->texteditors !== 'textarea') {
-            $rs = $DB->get_recordset('scheduler', array('introformat' => FORMAT_MOODLE),
+            $rs = $DB->get_recordset('scheduler', ['introformat' => FORMAT_MOODLE],
                 '', 'id, intro, introformat');
             foreach ($rs as $q) {
                 $q->intro       = text_to_html($q->intro, false, false, true);
@@ -198,7 +198,7 @@ function xmldb_scheduler_upgrade($oldversion=0) {
 
         // Define index schedulerid-teacherid (not unique) to be added to scheduler_slots.
         $table = new xmldb_table('scheduler_slots');
-        $index = new xmldb_index('schedulerid-teacherid', XMLDB_INDEX_NOTUNIQUE, array('schedulerid', 'teacherid'));
+        $index = new xmldb_index('schedulerid-teacherid', XMLDB_INDEX_NOTUNIQUE, ['schedulerid', 'teacherid']);
 
         // Conditionally launch add index schedulerid-teacherid.
         if (!$dbman->index_exists($table, $index)) {
@@ -207,7 +207,7 @@ function xmldb_scheduler_upgrade($oldversion=0) {
 
         // Define index slotid (not unique) to be added to scheduler_appointment.
         $table = new xmldb_table('scheduler_appointment');
-        $index = new xmldb_index('slotid', XMLDB_INDEX_NOTUNIQUE, array('slotid'));
+        $index = new xmldb_index('slotid', XMLDB_INDEX_NOTUNIQUE, ['slotid']);
 
         // Conditionally add index slotid.
         if (!$dbman->index_exists($table, $index)) {
@@ -216,7 +216,7 @@ function xmldb_scheduler_upgrade($oldversion=0) {
 
         // Define index studentid (not unique) to be added to scheduler_appointment.
         $table = new xmldb_table('scheduler_appointment');
-        $index = new xmldb_index('studentid', XMLDB_INDEX_NOTUNIQUE, array('studentid'));
+        $index = new xmldb_index('studentid', XMLDB_INDEX_NOTUNIQUE, ['studentid']);
 
         // Conditionally add index studentid.
         if (!$dbman->index_exists($table, $index)) {
@@ -225,7 +225,7 @@ function xmldb_scheduler_upgrade($oldversion=0) {
 
         // Convert old calendar events.
         $sql = 'UPDATE {event} SET modulename = ? WHERE eventtype LIKE ? OR eventtype LIKE ?';
-        $DB->execute($sql, array('scheduler', 'SSsup:%', 'SSstu:%'));
+        $DB->execute($sql, ['scheduler', 'SSsup:%', 'SSstu:%']);
 
         // Savepoint reached.
         upgrade_mod_savepoint(true, 2014071300, 'scheduler');

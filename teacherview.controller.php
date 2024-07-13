@@ -84,14 +84,14 @@ function scheduler_action_doaddsession($scheduler, $formdata, moodle_url $return
             if ($data->hideuntilrel == 0) {
                 $slot->hideuntil = time();
             } else {
-                $slot->hideuntil = make_timestamp($eventdate['year'], $eventdate['mon'], $eventdate['mday'], 6, 0) -
-                                    $data->hideuntilrel;
+                $slot->hideuntil = make_timestamp($eventdate['year'], $eventdate['mon'], $eventdate['mday'], 6, 0)
+                    - $data->hideuntilrel;
             }
             if ($data->emaildaterel == -1) {
                 $slot->emaildate = 0;
             } else {
-                $slot->emaildate = make_timestamp($eventdate['year'], $eventdate['mon'], $eventdate['mday'], 0, 0) -
-                                    $data->emaildaterel;
+                $slot->emaildate = make_timestamp($eventdate['year'], $eventdate['mon'], $eventdate['mday'], 0, 0)
+                    - $data->emaildaterel;
             }
             while ($slot->starttime <= $data->timeend - $slot->duration * 60) {
                 $conflicts = $scheduler->get_conflicts($data->timestart, $data->timestart + $slot->duration * 60,
@@ -230,13 +230,13 @@ switch ($action) {
         $slotid = required_param('slotid', PARAM_INT);
         $slot = $scheduler->get_slot($slotid);
         $permissions->ensure($permissions->can_edit_slot($slot));
-        scheduler_action_delete_slots(array($slot), $action, $viewurl);
+        scheduler_action_delete_slots([$slot], $action, $viewurl);
         break;
     /************************************ Deleting multiple slots ***********************************************/
     case 'deleteslots':
         $slotids = required_param('items', PARAM_SEQUENCE);
         $slotids = explode(",", $slotids);
-        $slots = array();
+        $slots = [];
         foreach ($slotids as $slotid) {
             if ($slotid > 0) {
                 $slot = $scheduler->get_slot($slotid);
@@ -250,7 +250,7 @@ switch ($action) {
     case 'saveseen':
         $slotid = required_param('slotid', PARAM_INT);
         $slot = $scheduler->get_slot($slotid);
-        $seen = optional_param_array('seen', array(), PARAM_INT);
+        $seen = optional_param_array('seen', [], PARAM_INT);
 
         if (is_array($seen)) {
             foreach ($slot->get_appointments() as $app) {
@@ -268,7 +268,7 @@ switch ($action) {
         $slot = $scheduler->get_slot($slotid);
         $permissions->ensure($permissions->can_edit_slot($slot));
 
-        $oldstudents = array();
+        $oldstudents = [];
         foreach ($slot->get_appointments() as $app) {
             $oldstudents[] = $app->studentid;
             $slot->remove_appointment($app);
@@ -278,8 +278,8 @@ switch ($action) {
             foreach ($oldstudents as $oldstudent) {
                 include_once($CFG->dirroot.'/mod/scheduler/mailtemplatelib.php');
 
-                $student = $DB->get_record('user', array('id' => $oldstudent));
-                $teacher = $DB->get_record('user', array('id' => $slot->teacherid));
+                $student = $DB->get_record('user', ['id' => $oldstudent]);
+                $teacher = $DB->get_record('user', ['id' => $slot->teacherid]);
 
                 scheduler_messenger::send_slot_notification($slot, 'bookingnotification', 'teachercancelled',
                                         $teacher, $student, $teacher, $student, $COURSE);

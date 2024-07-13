@@ -59,7 +59,7 @@ class provider implements
      * @param collection $collection a reference to the collection to use to store the metadata.
      * @return collection the updated collection of metadata items.
      */
-    public static function get_metadata(collection $collection) : collection {
+    public static function get_metadata(collection $collection): collection {
         $collection->add_database_table(
             'scheduler_slots',
             [
@@ -69,7 +69,7 @@ class provider implements
                 'appointmentlocation' => 'privacy:metadata:scheduler_slots:appointmentlocation',
                 'notes' => 'privacy:metadata:scheduler_slots:notes',
                 'notesformat' => 'privacy:metadata:scheduler_slots:notesformat',
-                'exclusivity' => 'privacy:metadata:scheduler_slots:exclusivity'
+                'exclusivity' => 'privacy:metadata:scheduler_slots:exclusivity',
                  // The fields "timemodified", "emaildate" and "hideuntil" do not contain personal data.
             ],
             'privacy:metadata:scheduler_slots'
@@ -85,7 +85,7 @@ class provider implements
                 'teachernote' => 'privacy:metadata:scheduler_appointment:teachernote',
                 'teachernoteformat' => 'privacy:metadata:scheduler_appointment:teachernoteformat',
                 'studentnote' => 'privacy:metadata:scheduler_appointment:studentnote',
-                'studentnoteformat' => 'privacy:metadata:scheduler_appointment:studentnoteformat'
+                'studentnoteformat' => 'privacy:metadata:scheduler_appointment:studentnoteformat',
                 // The fields "timecreated" and "timemodifed" are technical only, they do not contain personal data.
             ],
             'privacy:metadata:scheduler_appointment'
@@ -103,7 +103,7 @@ class provider implements
      * @param int $userid the userid.
      * @return contextlist the list of contexts containing user info for the user.
      */
-    public static function get_contexts_for_userid(int $userid) : contextlist {
+    public static function get_contexts_for_userid(int $userid): contextlist {
         $contextlist = new contextlist();
 
         // Fetch all scheduler records for teachers.
@@ -118,7 +118,7 @@ class provider implements
         $params = [
             'modname'       => 'scheduler',
             'contextlevel'  => CONTEXT_MODULE,
-            'userid'        => $userid
+            'userid'        => $userid,
         ];
 
         $contextlist->add_from_sql($sql, $params);
@@ -136,7 +136,7 @@ class provider implements
         $params = [
                 'modname'       => 'scheduler',
                 'contextlevel'  => CONTEXT_MODULE,
-                'userid'        => $userid
+                'userid'        => $userid,
         ];
 
         $contextlist->add_from_sql($sql, $params);
@@ -167,7 +167,7 @@ class provider implements
 
         $params = [
                 'modname'       => 'scheduler',
-                'cmid'          => $context->instanceid
+                'cmid'          => $context->instanceid,
         ];
 
         $userlist->add_from_sql('teacherid', $sql, $params);
@@ -183,7 +183,7 @@ class provider implements
 
         $params = [
                 'modname'       => 'scheduler',
-                'cmid'          => $context->instanceid
+                'cmid'          => $context->instanceid,
         ];
 
         $userlist->add_from_sql('studentid', $sql, $params);
@@ -255,7 +255,7 @@ class provider implements
                 AND t.teacherid = :userid1 OR a.studentid = :userid2
                 ORDER BY cm.id, t.id, a.id";
         $rs = $DB->get_recordset_sql($sql, $contextparams + ['contextlevel' => CONTEXT_MODULE,
-                'modname' => 'scheduler', 'userid1' => $user->id, 'userid2' => $user->id]);
+                'modname' => 'scheduler', 'userid1' => $user->id, 'userid2' => $user->id, ]);
 
         $context = null;
         $lastrow = null;
@@ -302,7 +302,7 @@ class provider implements
         }
         $opts = (object) [
                 'para'    => false,
-                'context' => $context
+                'context' => $context,
         ];
         $message = format_text($message, $noteformat, $opts);
         return $message;

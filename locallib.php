@@ -43,8 +43,8 @@ function scheduler_delete_calendar_events($slot) {
     $teachereventtype = "SSsup:{$slot->id}";
     $studenteventtype = "SSstu:{$slot->id}";
 
-    $teacherdeletionsuccess = $DB->delete_records('event', array('eventtype' => $teachereventtype));
-    $studentdeletionsuccess = $DB->delete_records('event', array('eventtype' => $studenteventtype));
+    $teacherdeletionsuccess = $DB->delete_records('event', ['eventtype' => $teachereventtype]);
+    $studentdeletionsuccess = $DB->delete_records('event', ['eventtype' => $studenteventtype]);
 
     return ($teacherdeletionsuccess && $studentdeletionsuccess);
     // This return may not be meaningful if the delete records functions do not return anything meaningful.
@@ -109,7 +109,7 @@ function scheduler_print_user($user, $course, $messageselect=false, $return=fals
 
     // Get the hidden field list.
     if (has_capability('moodle/course:viewhiddenuserfields', $context)) {
-        $hiddenfields = array();
+        $hiddenfields = [];
     } else {
         $hiddenfields = array_flip(explode(',', $CFG->hiddenuserfields));
     }
@@ -117,7 +117,7 @@ function scheduler_print_user($user, $course, $messageselect=false, $return=fals
     $output .= '<table class="userinfobox">';
     $output .= '<tr>';
     $output .= '<td class="left side">';
-    $output .= $OUTPUT->user_picture($user, array('size' => 100));
+    $output .= $OUTPUT->user_picture($user, ['size' => 100]);
     $output .= '</td>';
     $output .= '<td class="content">';
     $output .= '<div class="username">'.fullname($user, has_capability('moodle/site:viewfullnames', $context)).'</div>';
@@ -216,12 +216,12 @@ class scheduler_file_info extends file_info {
      * @return array with keys contextid, filearea, itemid, filepath and filename
      */
     public function get_params() {
-        return array('contextid' => $this->context->id,
+        return ['contextid' => $this->context->id,
                      'component' => 'mod_scheduler',
                      'filearea'  => $this->filearea,
                      'itemid'    => null,
                      'filepath'  => null,
-                     'filename'  => null);
+                     'filename'  => null, ];
     }
 
     /**
@@ -269,9 +269,9 @@ class scheduler_file_info extends file_info {
     private function get_filtered_children($extensions = '*', $countonly = false, $returnemptyfolders = false) {
         global $DB;
 
-        $params = array('contextid' => $this->context->id,
+        $params = ['contextid' => $this->context->id,
                         'component' => 'mod_scheduler',
-                        'filearea' => $this->filearea);
+                        'filearea' => $this->filearea, ];
         $sql = "SELECT DISTINCT f.itemid AS id
                            FROM {files} f
                           WHERE f.contextid = :contextid
@@ -286,7 +286,7 @@ class scheduler_file_info extends file_info {
         $params = array_merge($params, $params2);
 
         $rs = $DB->get_recordset_sql($sql, $params);
-        $children = array();
+        $children = [];
         foreach ($rs as $record) {
             if ($child = $this->browser->get_file_info($this->context, 'mod_scheduler', $this->filearea, $record->id)) {
                 if ($returnemptyfolders || $child->count_non_empty_children($extensions)) {

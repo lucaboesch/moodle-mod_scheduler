@@ -44,11 +44,11 @@ abstract class slot_base extends \core\event\base {
      * @return array
      */
     protected static function base_data(\mod_scheduler\model\slot $slot) {
-        return array(
+        return [
             'context' => $slot->get_scheduler()->get_context(),
             'objectid' => $slot->id,
-            'relateduserid' => $slot->teacherid
-        );
+            'relateduserid' => $slot->teacherid,
+        ];
     }
 
     /**
@@ -84,7 +84,7 @@ abstract class slot_base extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/scheduler/view.php', array('id' => $this->contextinstanceid));
+        return new \moodle_url('/mod/scheduler/view.php', ['id' => $this->contextinstanceid]);
     }
 
     /**

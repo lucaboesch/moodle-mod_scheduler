@@ -35,8 +35,8 @@ if ($groupmode) {
     $currentgroupid = groups_get_activity_group($scheduler->cm, true);
 }
 
-$actionurl = new moodle_url('/mod/scheduler/view.php', array('what' => 'export', 'id' => $scheduler->cmid));
-$returnurl = new moodle_url('/mod/scheduler/view.php', array('what' => 'view', 'id' => $scheduler->cmid));
+$actionurl = new moodle_url('/mod/scheduler/view.php', ['what' => 'export', 'id' => $scheduler->cmid]);
+$returnurl = new moodle_url('/mod/scheduler/view.php', ['what' => 'view', 'id' => $scheduler->cmid]);
 $PAGE->set_url($actionurl);
 $mform = new scheduler_export_form($actionurl, $scheduler);
 
@@ -47,7 +47,7 @@ if ($mform->is_cancelled()) {
 $data = $mform->get_data();
 if ($data) {
     $availablefields = scheduler_get_export_fields($scheduler);
-    $selectedfields = array();
+    $selectedfields = [];
     foreach ($availablefields as $field) {
         $inputid = 'field-'.$field->get_id();
         if (isset($data->{$inputid}) && $data->{$inputid} == 1) {
@@ -70,7 +70,7 @@ if (!$data || $preview) {
     echo $OUTPUT->header();
 
     // Print top tabs.
-    $taburl = new moodle_url('/mod/scheduler/view.php', array('id' => $scheduler->cmid, 'what' => 'export'));
+    $taburl = new moodle_url('/mod/scheduler/view.php', ['id' => $scheduler->cmid, 'what' => 'export']);
     echo $output->teacherview_tabs($scheduler, $permissions, $taburl, 'export');
 
     if ($groupmode) {

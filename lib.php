@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use \mod_scheduler\model\scheduler;
+use mod_scheduler\model\scheduler;
 
 // Library of functions and constants for module Scheduler.
 
@@ -61,7 +61,7 @@ function scheduler_add_instance($data, $mform = null) {
 
     $data->id = $DB->insert_record('scheduler', $data);
 
-    $DB->set_field('course_modules', 'instance', $data->id, array('id' => $cmid));
+    $DB->set_field('course_modules', 'instance', $data->id, ['id' => $cmid]);
     $context = context_module::instance($cmid);
 
     if ($mform) {
@@ -125,7 +125,7 @@ function scheduler_update_instance($data, $mform) {
 function scheduler_delete_instance($id) {
     global $DB;
 
-    if (! $DB->record_exists('scheduler', array('id' => $id))) {
+    if (! $DB->record_exists('scheduler', ['id' => $id])) {
         return false;
     }
 
@@ -133,7 +133,7 @@ function scheduler_delete_instance($id) {
     $scheduler->delete();
 
     // Clean up any possibly remaining event records.
-    $params = array('modulename' => 'scheduler', 'instance' => $id);
+    $params = ['modulename' => 'scheduler', 'instance' => $id];
     $DB->delete_records('event', $params);
 
     return true;
@@ -161,7 +161,7 @@ function scheduler_user_outline($course, $user, $mod, $scheduler) {
     $text = '';
 
     if ($attended + $upcoming > 0) {
-        $a = array('attended' => $attended, 'upcoming' => $upcoming);
+        $a = ['attended' => $attended, 'upcoming' => $upcoming];
         $text .= get_string('outlineappointments', 'scheduler', $a);
     }
 
@@ -247,7 +247,7 @@ function scheduler_scale_used($cmid, $scaleid) {
     $return = false;
 
     // Note: scales are assigned using negative index in the grade field of the appointment (see mod/assignement/lib.php).
-    $rec = $DB->get_record('scheduler', array('id' => $cmid, 'scale' => -$scaleid));
+    $rec = $DB->get_record('scheduler', ['id' => $cmid, 'scale' => -$scaleid]);
 
     if (!empty($rec) && !empty($scaleid)) {
         $return = true;
@@ -267,7 +267,7 @@ function scheduler_scale_used($cmid, $scaleid) {
 function scheduler_scale_used_anywhere($scaleid) {
     global $DB;
 
-    if ($scaleid && $DB->record_exists('scheduler', array('scale' => -$scaleid))) {
+    if ($scaleid && $DB->record_exists('scheduler', ['scale' => -$scaleid])) {
         return true;
     } else {
         return false;
@@ -292,7 +292,7 @@ function scheduler_reset_course_form_definition(&$mform) {
 
     $mform->addElement('header', 'schedulerheader', get_string('modulenameplural', 'scheduler'));
 
-    if ($DB->record_exists('scheduler', array('course' => $COURSE->id))) {
+    if ($DB->record_exists('scheduler', ['course' => $COURSE->id])) {
 
         $mform->addElement('checkbox', 'reset_scheduler_slots', get_string('resetslots', 'scheduler'));
         $mform->addElement('checkbox', 'reset_scheduler_appointments', get_string('resetappointments', 'scheduler'));
@@ -306,7 +306,7 @@ function scheduler_reset_course_form_definition(&$mform) {
  * @param stdClass $course the course in which the reset takes place
  */
 function scheduler_reset_course_form_defaults($course) {
-    return array('reset_scheduler_slots' => 1, 'reset_scheduler_appointments' => 1);
+    return ['reset_scheduler_slots' => 1, 'reset_scheduler_appointments' => 1];
 }
 
 
@@ -321,7 +321,7 @@ function scheduler_reset_course_form_defaults($course) {
 function scheduler_reset_userdata($data) {
     global $CFG, $DB;
 
-    $status = array();
+    $status = [];
     $componentstr = get_string('modulenameplural', 'scheduler');
 
     $success = true;
@@ -335,16 +335,16 @@ function scheduler_reset_userdata($data) {
 
             if (!empty($data->reset_scheduler_slots) ) {
                 $scheduler->delete_all_slots();
-                $status[] = array('component' => $componentstr, 'item' => get_string('resetslots', 'scheduler'), 'error' => false);
+                $status[] = ['component' => $componentstr, 'item' => get_string('resetslots', 'scheduler'), 'error' => false];
             } else if (!empty($data->reset_scheduler_appointments) ) {
                 foreach ($scheduler->get_all_slots() as $slot) {
                     $slot->delete_all_appointments();
                 }
-                $status[] = array(
+                $status[] = [
                     'component' => $componentstr,
                     'item' => get_string('resetappointments', 'scheduler'),
-                    'error' => !$success
-                );
+                    'error' => !$success,
+                ];
             }
         }
     }
@@ -437,15 +437,15 @@ function scheduler_grade_item_update($scheduler, $grades=null) {
     if (!isset($scheduler->courseid)) {
         $scheduler->courseid = $scheduler->course;
     }
-    $moduleid = $DB->get_field('modules', 'id', array('name' => 'scheduler'));
-    $cmid = $DB->get_field('course_modules', 'id', array('module' => $moduleid, 'instance' => $scheduler->id));
+    $moduleid = $DB->get_field('modules', 'id', ['name' => 'scheduler']);
+    $cmid = $DB->get_field('course_modules', 'id', ['module' => $moduleid, 'instance' => $scheduler->id]);
 
     if ($scheduler->scale == 0) {
         // Delete any grade item.
         scheduler_grade_item_delete($scheduler);
         return 0;
     } else {
-        $params = array('itemname' => $scheduler->name, 'idnumber' => $cmid);
+        $params = ['itemname' => $scheduler->name, 'idnumber' => $cmid];
 
         if ($scheduler->scale > 0) {
             $params['gradetype'] = GRADE_TYPE_VALUE;
@@ -515,7 +515,7 @@ function scheduler_grade_item_delete($scheduler) {
         $scheduler->courseid = $scheduler->course;
     }
 
-    return grade_update('mod/scheduler', $scheduler->courseid, 'mod', 'scheduler', $scheduler->id, 0, null, array('deleted' => 1));
+    return grade_update('mod/scheduler', $scheduler->courseid, 'mod', 'scheduler', $scheduler->id, 0, null, ['deleted' => 1]);
 }
 
 
@@ -534,12 +534,12 @@ function scheduler_grade_item_delete($scheduler) {
  * @return array
  */
 function scheduler_get_file_areas($course, $cm, $context) {
-    return array(
+    return [
             'bookinginstructions' => get_string('bookinginstructions', 'scheduler'),
             'slotnote' => get_string('areaslotnote', 'scheduler'),
             'appointmentnote' => get_string('areaappointmentnote', 'scheduler'),
-            'teachernote' => get_string('areateachernote', 'scheduler')
-    );
+            'teachernote' => get_string('areateachernote', 'scheduler'),
+    ];
 }
 
 /**
@@ -561,8 +561,8 @@ function scheduler_get_file_info($browser, $areas, $course, $cm, $context, $file
 
     // Note: 'intro' area is handled in file_browser automatically.
 
-    if (!has_any_capability(array('mod/scheduler:appoint', 'mod/scheduler:attend',
-                                  'mod/scheduler:viewotherteachersbooking', 'mod/scheduler:manageallappointments'), $context)) {
+    if (!has_any_capability(['mod/scheduler:appoint', 'mod/scheduler:attend',
+                                  'mod/scheduler:viewotherteachersbooking', 'mod/scheduler:manageallappointments', ], $context)) {
         return null;
     }
 
@@ -640,7 +640,7 @@ function scheduler_get_file_info($browser, $areas, $course, $cm, $context, $file
  * @param array $options additional options affecting the file serving
  * @return bool false if file not found, does not return if found - just send the file
  */
-function scheduler_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function scheduler_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=[]) {
     global $CFG, $DB, $USER;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -648,7 +648,7 @@ function scheduler_pluginfile($course, $cm, $context, $filearea, $args, $forcedo
     }
 
     require_course_login($course, true, $cm);
-    if (!has_any_capability(array('mod/scheduler:appoint', 'mod/scheduler:attend'), $context)) {
+    if (!has_any_capability(['mod/scheduler:appoint', 'mod/scheduler:attend'], $context)) {
         return false;
     }
 
@@ -690,7 +690,7 @@ function scheduler_pluginfile($course, $cm, $context, $filearea, $args, $forcedo
             $permissions->ensure($permissions->teacher_can_see_slot($slot));
 
         } else if ($filearea === 'bookinginstructions') {
-            $caps = array('moodle/course:manageactivities', 'mod/scheduler:appoint');
+            $caps = ['moodle/course:manageactivities', 'mod/scheduler:appoint'];
             if (!has_any_capability($caps, $context)) {
                 return false;
             }

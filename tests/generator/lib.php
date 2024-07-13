@@ -22,6 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// Let codechecker ignore the sniff for this file for nullable types since the super method of
+// create_instance is not yet rewritten and mod_quizgame_generator::create_instance must have an identical signature.
+// phpcs:disable PHPCompatibility.FunctionDeclarations.RemovedImplicitlyNullableParam.Deprecated
+
 /**
  * Scheduler module PHPUnit data generator class
  *
@@ -88,8 +92,8 @@ class mod_scheduler_generator extends testing_module_generator {
                 $slot->schedulerid = $id;
                 $slot->starttime = $time;
                 $slot->duration = 10;
-                $slot->teacherid = isset($options['slotteachers'][$slotkey]) ?
-                    $options['slotteachers'][$slotkey] : 2; // Admin user as default.
+                $slot->teacherid = isset($options['slotteachers'][$slotkey]) ? $options['slotteachers'][$slotkey] : 2;
+                // Admin user as default.
                 $slot->appointmentlocation = 'Test Loc';
                 $slot->timemodified = time();
                 $slot->notes = '';

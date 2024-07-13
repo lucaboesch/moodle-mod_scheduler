@@ -54,7 +54,7 @@ abstract class permissions_manager {
         $this->context = $context;
         $this->prefix = str_replace('_', '/', $pluginname) . ':';
 
-        $this->caps = array();
+        $this->caps = [];
     }
 
     /**

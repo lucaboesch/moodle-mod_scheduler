@@ -39,7 +39,7 @@
  */
 function scheduler_get_user_fields($user, $context) {
 
-    $fields = array();
+    $fields = [];
 
     if (has_capability('moodle/site:viewuseridentity', $context)) {
         $emailfield = new stdClass();
@@ -49,6 +49,8 @@ function scheduler_get_user_fields($user, $context) {
             $emailfield->value = obfuscate_mailto($user->email);
         }
     }
+
+    // phpcs:disable Squiz.PHP.CommentedOutCode.Found
 
     /*
      * As an example: Uncomment the following lines in order to display the user's city and country.
