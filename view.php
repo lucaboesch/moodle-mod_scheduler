@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use \mod_scheduler\model\scheduler;
+use mod_scheduler\model\scheduler;
 
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->dirroot.'/mod/scheduler/lib.php');
@@ -43,7 +43,7 @@ if ($id) {
     $scheduler = scheduler::load_by_id($a);
     $cm = $scheduler->get_cm();
 }
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
 
 
 require_login($course->id, true, $cm);
@@ -51,7 +51,7 @@ $context = context_module::instance($cm->id);
 $permissions = new \mod_scheduler\permission\scheduler_permissions($context, $USER->id);
 
 // Initialize $PAGE, compute blocks.
-$PAGE->set_url('/mod/scheduler/view.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/scheduler/view.php', ['id' => $cm->id]);
 
 $output = $PAGE->get_renderer('mod_scheduler');
 

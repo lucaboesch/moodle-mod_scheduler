@@ -230,13 +230,13 @@ switch ($action) {
         $slotid = required_param('slotid', PARAM_INT);
         $slot = $scheduler->get_slot($slotid);
         $permissions->ensure($permissions->can_edit_slot($slot));
-        scheduler_action_delete_slots(array($slot), $action, $viewurl);
+        scheduler_action_delete_slots([$slot], $action, $viewurl);
         break;
     /************************************ Deleting multiple slots ***********************************************/
     case 'deleteslots':
         $slotids = required_param('items', PARAM_SEQUENCE);
         $slotids = explode(",", $slotids);
-        $slots = array();
+        $slots = [];
         foreach ($slotids as $slotid) {
             if ($slotid > 0) {
                 $slot = $scheduler->get_slot($slotid);
@@ -250,7 +250,7 @@ switch ($action) {
     case 'saveseen':
         $slotid = required_param('slotid', PARAM_INT);
         $slot = $scheduler->get_slot($slotid);
-        $seen = optional_param_array('seen', array(), PARAM_INT);
+        $seen = optional_param_array('seen', [], PARAM_INT);
 
         if (is_array($seen)) {
             foreach ($slot->get_appointments() as $app) {
@@ -268,7 +268,7 @@ switch ($action) {
         $slot = $scheduler->get_slot($slotid);
         $permissions->ensure($permissions->can_edit_slot($slot));
 
-        $oldstudents = array();
+        $oldstudents = [];
         foreach ($slot->get_appointments() as $app) {
             $oldstudents[] = $app->studentid;
             $slot->remove_appointment($app);
@@ -278,8 +278,8 @@ switch ($action) {
             foreach ($oldstudents as $oldstudent) {
                 include_once($CFG->dirroot.'/mod/scheduler/mailtemplatelib.php');
 
-                $student = $DB->get_record('user', array('id' => $oldstudent));
-                $teacher = $DB->get_record('user', array('id' => $slot->teacherid));
+                $student = $DB->get_record('user', ['id' => $oldstudent]);
+                $teacher = $DB->get_record('user', ['id' => $slot->teacherid]);
 
                 scheduler_messenger::send_slot_notification($slot, 'bookingnotification', 'teachercancelled',
                                         $teacher, $student, $teacher, $student, $COURSE);

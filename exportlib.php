@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use \mod_scheduler\model\scheduler;
-use \mod_scheduler\model\slot;
-use \mod_scheduler\model\appointment;
+use mod_scheduler\model\scheduler;
+use mod_scheduler\model\slot;
+use mod_scheduler\model\appointment;
 
 require_once($CFG->dirroot.'/lib/excellib.class.php');
 require_once($CFG->dirroot.'/lib/odslib.class.php');
@@ -98,7 +98,7 @@ abstract class scheduler_export_field {
      * @return array the header for this field
      */
     public function get_headers(scheduler $scheduler) {
-        return array($this->get_header($scheduler));
+        return [$this->get_header($scheduler)];
     }
 
     /**
@@ -160,7 +160,7 @@ abstract class scheduler_export_field {
      * @return array an array of strings containing the column values
      */
     public function get_values(slot $slot, $appointment) {
-        return array($this->get_value($slot, $appointment));
+        return [$this->get_value($slot, $appointment)];
     }
 
 }
@@ -172,7 +172,7 @@ abstract class scheduler_export_field {
  * @return array the fields as an array of scheduler_export_field objects.
  */
 function scheduler_get_export_fields(scheduler $scheduler) {
-    $result = array();
+    $result = [];
     $result[] = new slotdate_field();
     $result[] = new scheduler_starttime_field();
     $result[] = new scheduler_endtime_field();
@@ -1179,7 +1179,7 @@ class scheduler_groups_single_field extends scheduler_export_field {
         $scheduler = $slot->get_scheduler();
         $groups = groups_get_user_groups($scheduler->courseid, $appointment->studentid);
         $groupingid = $scheduler->get_cm()->groupingid;
-        $gn = array();
+        $gn = [];
         foreach ($groups[$groupingid] as $groupid) {
             $gn[] = groups_get_group_name($groupid);
         }
@@ -1254,7 +1254,7 @@ class scheduler_groups_multi_field extends scheduler_export_field {
      * @return array the header for this field
      */
     public function get_headers(scheduler $scheduler) {
-        $result = array();
+        $result = [];
         foreach ($this->coursegroups as $group) {
             $result[] = $group->name;
         }
@@ -1285,7 +1285,7 @@ class scheduler_groups_multi_field extends scheduler_export_field {
             return '';
         }
         $usergroups = groups_get_user_groups($slot->get_scheduler()->courseid, $appointment->studentid)[0];
-        $result = array();
+        $result = [];
         foreach ($this->coursegroups as $group) {
             $key = in_array($group->id, $usergroups) ? 'yes' : 'no';
             $result[] = get_string($key);
@@ -1700,7 +1700,7 @@ abstract class scheduler_cached_text_canvas extends scheduler_canvas {
         foreach ($page->columnwidths as $width) {
             $sum += $width;
         }
-        $relwidths = array();
+        $relwidths = [];
         for ($col = 0; $col < $cols; $col++) {
             if ($sum > 0 && isset($page->columnwidths[$col])) {
                 $relwidths[$col] = (int) ($page->columnwidths[$col] / $sum * 100);
@@ -1723,10 +1723,10 @@ abstract class scheduler_cached_text_canvas extends scheduler_canvas {
         } else {
             $newpage = new stdClass;
             $newpage->title = $title;
-            $newpage->cells = array();
-            $newpage->formats = array();
-            $newpage->mergers = array();
-            $newpage->columnwidths = array();
+            $newpage->cells = [];
+            $newpage->formats = [];
+            $newpage->mergers = [];
+            $newpage->columnwidths = [];
             $this->pages[] = $newpage;
             $this->curpage = $newpage;
         }
@@ -1913,7 +1913,7 @@ class scheduler_csv_canvas extends scheduler_cached_text_canvas {
 
         foreach ($this->pages as $page) {
             if ($page->title) {
-                $writer->add_data(array('*** '.$page->title.' ***'));
+                $writer->add_data(['*** '.$page->title.' ***']);
             }
 
             // Find extent of the table.
@@ -1921,7 +1921,7 @@ class scheduler_csv_canvas extends scheduler_cached_text_canvas {
             $cols = $this->get_col_count($page);
 
             for ($row = 0; $row < $rows; $row++) {
-                $data = array();
+                $data = [];
                 $col = 0;
                 while ($col < $cols) {
                     if (isset($page->cells[$row][$col])) {
@@ -1997,7 +1997,7 @@ class scheduler_pdf_canvas extends scheduler_cached_text_canvas {
             $cols = $this->get_col_count($page);
             $relwidths = $this->compute_relative_widths($page);
 
-            $o = html_writer::start_tag('table', array('border' => 1, 'cellpadding' => 1));
+            $o = html_writer::start_tag('table', ['border' => 1, 'cellpadding' => 1]);
             for ($row = 0; $row < $rows; $row++) {
                 $o .= html_writer::start_tag('tr');
                 $col = 0;
@@ -2009,7 +2009,7 @@ class scheduler_pdf_canvas extends scheduler_cached_text_canvas {
                             $span = $mergewidth;
                         }
                     }
-                    $opts = array();
+                    $opts = [];
                     if ($row == 0 && $relwidths[$col] > 0) {
                         $opts['width'] = $relwidths[$col].'%';
                     }
@@ -2210,7 +2210,7 @@ class scheduler_export {
      */
     protected function write_row_summary($row, slot $slot, array $fields) {
 
-        $strs = array();
+        $strs = [];
         $cols = 0;
         foreach ($fields as $field) {
             if ($field->get_group() == 'slot') {

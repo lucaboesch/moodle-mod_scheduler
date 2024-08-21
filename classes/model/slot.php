@@ -136,7 +136,7 @@ class slot extends mvc_child_record_model {
         // Copy files from the source to the target.
         $files = $fs->get_area_files($ctxid, $component, $area, $sourceid);
         foreach ($files as $f) {
-            $fs->create_file_from_storedfile(array('itemid' => $targetid), $f);
+            $fs->create_file_from_storedfile(['itemid' => $targetid], $f);
         }
     }
 
@@ -157,7 +157,7 @@ class slot extends mvc_child_record_model {
     public function get_teacher() {
         global $DB;
         if ($this->data->teacherid) {
-            return $DB->get_record('user', array('id' => $this->data->teacherid), '*', MUST_EXIST);
+            return $DB->get_record('user', ['id' => $this->data->teacherid], '*', MUST_EXIST);
         } else {
             return new \stdClass();
         }
@@ -364,8 +364,8 @@ class slot extends mvc_child_record_model {
      */
     private function clear_calendar() {
         global $DB;
-        $DB->delete_records('event', array('eventtype' => $this->get_teacher_eventtype()));
-        $DB->delete_records('event', array('eventtype' => $this->get_student_eventtype()));
+        $DB->delete_records('event', ['eventtype' => $this->get_teacher_eventtype()]);
+        $DB->delete_records('event', ['eventtype' => $this->get_student_eventtype()]);
     }
 
     /**
@@ -381,16 +381,16 @@ class slot extends mvc_child_record_model {
 
         $myappointments = $this->appointments->get_children();
 
-        $studentids = array();
+        $studentids = [];
         foreach ($myappointments as $appointment) {
             if (!$appointment->is_attended()) {
                 $studentids[] = $appointment->studentid;
             }
         }
 
-        $teacher = $DB->get_record('user', array('id' => $this->teacherid));
+        $teacher = $DB->get_record('user', ['id' => $this->teacherid]);
         $students = $DB->get_records_list('user', 'id', $studentids);
-        $studentnames = array();
+        $studentnames = [];
         foreach ($students as $student) {
             $studentnames[] = fullname($student);
         }
@@ -422,7 +422,7 @@ class slot extends mvc_child_record_model {
 
         // Update teacher events.
 
-        $teacherids = array();
+        $teacherids = [];
         $teacherevent = clone($baseevent);
         if (count($studentids) > 0) {
             $teacherids[] = $teacher->id;
@@ -454,9 +454,9 @@ class slot extends mvc_child_record_model {
 
         $eventdata->eventtype = $eventtype;
 
-        $existingevents = $DB->get_records('event', array('modulename' => 'scheduler', 'eventtype' => $eventtype));
-        $handledevents = array();
-        $handledusers = array();
+        $existingevents = $DB->get_records('event', ['modulename' => 'scheduler', 'eventtype' => $eventtype]);
+        $handledevents = [];
+        $handledusers = [];
 
         // Update existing calendar events.
         foreach ($existingevents as $eventid => $existingdata) {

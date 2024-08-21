@@ -57,11 +57,11 @@ class send_reminders extends \core\task\scheduled_task {
 
         // Find relevant slots in all schedulers.
         $select = 'emaildate > 0 AND emaildate <= ? AND starttime > ?';
-        $slots = $DB->get_records_select('scheduler_slots', $select, array($date, $date), 'starttime');
+        $slots = $DB->get_records_select('scheduler_slots', $select, [$date, $date], 'starttime');
 
         foreach ($slots as $slot) {
             // Get teacher record.
-            $teacher = $DB->get_record('user', array('id' => $slot->teacherid));
+            $teacher = $DB->get_record('user', ['id' => $slot->teacherid]);
 
             // Get scheduler, slot and course.
             $scheduler = \mod_scheduler\model\scheduler::load_by_id($slot->schedulerid);

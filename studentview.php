@@ -30,10 +30,10 @@ $appointgroup = optional_param('appointgroup', -1, PARAM_INT);
 
 $PAGE->set_docs_path('mod/scheduler/studentview');
 
-$urlparas = array(
+$urlparas = [
         'id' => $scheduler->cmid,
-        'sesskey' => sesskey()
-);
+        'sesskey' => sesskey(),
+];
 if ($appointgroup >= 0) {
     $urlparas['appointgroup'] = $appointgroup;
 }
@@ -76,7 +76,7 @@ if ($showowngrades) {
         $grademsg = '';
         if ($gradebookinfo->overridden) {
             $grademsg = html_writer::tag('p',
-                            get_string('overriddennotice', 'grades'),  array('class' => 'overriddennotice')
+                            get_string('overriddennotice', 'grades'),  ['class' => 'overriddennotice']
                         );
         }
         $grademsg .= get_string('yourtotalgrade', 'scheduler', $gradebookinfo->str_grade);
@@ -86,7 +86,7 @@ if ($showowngrades) {
 
 // Print group selection menu if given.
 if ($scheduler->is_group_scheduling_enabled()) {
-    $groupchoice = array();
+    $groupchoice = [];
     if ($scheduler->is_individual_scheduling_enabled()) {
         $groupchoice[0] = get_string('myself', 'scheduler');
     }
@@ -94,7 +94,7 @@ if ($scheduler->is_group_scheduling_enabled()) {
         $groupchoice[$group->id] = $group->name;
     }
     $select = $output->single_select($actionurl, 'appointgroup', $groupchoice, $appointgroup,
-                                     array(-1 => 'choosedots'), 'appointgroupform');
+                                     [-1 => 'choosedots'], 'appointgroupform');
     echo html_writer::div(get_string('appointforgroup', 'scheduler', $select), 'dropdownmenu');
 }
 

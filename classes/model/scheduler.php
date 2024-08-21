@@ -178,7 +178,7 @@ class scheduler extends mvc_record_model {
     public function get_courserec() {
         global $DB;
         if (is_null($this->courserec)) {
-            $this->courserec = $DB->get_record('course', array('id' => $this->get_courseid()), '*', MUST_EXIST);
+            $this->courserec = $DB->get_record('course', ['id' => $this->get_courseid()], '*', MUST_EXIST);
         }
         return $this->courserec;
     }
@@ -293,7 +293,7 @@ class scheduler extends mvc_record_model {
     public function get_last_location($user) {
         global $DB;
 
-        $conds = array('schedulerid' => $this->data->id, 'teacherid' => $user->id);
+        $conds = ['schedulerid' => $this->data->id, 'teacherid' => $user->id];
         $recs = $DB->get_records('scheduler_slots', $conds, 'timemodified DESC', 'id,appointmentlocation', 0, 1);
         $lastlocation = '';
         if ($recs) {
@@ -422,7 +422,7 @@ class scheduler extends mvc_record_model {
         }
 
         $usersql = '';
-        $params = array();
+        $params = [];
         if ($userid) {
             $usersql = ' AND a.studentid = :userid';
             $params['userid'] = $userid;
@@ -434,8 +434,8 @@ class scheduler extends mvc_record_model {
                'WHERE s.schedulerid = :sid AND a.grade IS NOT NULL'.$usersql;
 
         $grades = $DB->get_records_sql($sql, $params);
-        $finalgrades = array();
-        $gradesums = array();
+        $finalgrades = [];
+        $gradesums = [];
 
         foreach ($grades as $grade) {
             $gradesums[$grade->studentid] = new \stdClass();
@@ -465,7 +465,7 @@ class scheduler extends mvc_record_model {
         } else { // Grading on scales.
             $scaleid = - ($this->scale);
             $maxgrade = '';
-            if ($scale = $DB->get_record('scale', array('id' => $scaleid))) {
+            if ($scale = $DB->get_record('scale', ['id' => $scaleid])) {
                 $scalegrades = make_menu_from_list($scale->scale);
                 foreach ($grades as $grade) {
                     $gradesums[$grade->studentid]->sum = @$gradesums[$grade->studentid]->sum + $grade->grade;
@@ -576,7 +576,7 @@ class scheduler extends mvc_record_model {
         $sql = "$select $where $having $order";
 
         $slotdata = $DB->get_records_sql($sql, $params, $limitfrom, $limitnum);
-        $slots = array();
+        $slots = [];
         foreach ($slotdata as $slotrecord) {
             $slot = new slot($this);
             $slot->load_record($slotrecord);
@@ -659,7 +659,7 @@ class scheduler extends mvc_record_model {
 
         global $DB;
 
-        $slotdata = $DB->get_record('scheduler_slots', array('id' => $id, 'schedulerid' => $this->id), '*', MUST_EXIST);
+        $slotdata = $DB->get_record('scheduler_slots', ['id' => $id, 'schedulerid' => $this->id], '*', MUST_EXIST);
         $slot = new slot($this);
         $slot->load_record($slotdata);
         return $slot;
@@ -691,7 +691,7 @@ class scheduler extends mvc_record_model {
      * @return slot[]
      */
     public function get_all_slots($limitfrom='', $limitnum='') {
-        return $this->fetch_slots('', '', array(), $limitfrom, $limitnum, 's.starttime ASC');
+        return $this->fetch_slots('', '', [], $limitfrom, $limitnum, 's.starttime ASC');
     }
 
     /**
@@ -702,7 +702,7 @@ class scheduler extends mvc_record_model {
      */
     public function get_attended_slots_for_student($studentid) {
 
-        $params = array();
+        $params = [];
         $wherecond = $this->student_in_slot_condition($params, $studentid, true, false);
 
         $slots = $this->fetch_slots($wherecond, '', $params, '', '', 's.starttime');
@@ -719,7 +719,7 @@ class scheduler extends mvc_record_model {
      */
     public function get_upcoming_slots_for_student($studentid) {
 
-        $params = array();
+        $params = [];
         $wherecond = $this->student_in_slot_condition($params, $studentid, false, true);
         $slots = $this->fetch_slots($wherecond, '', $params, '', '', 's.starttime');
 
@@ -740,7 +740,7 @@ class scheduler extends mvc_record_model {
 
         global $DB;
 
-        $params = array();
+        $params = [];
         $wherecond = "(s.starttime > :cutofftime) AND (s.hideuntil < :nowhide)";
         $params['nowhide'] = time();
         $params['cutofftime'] = time() + $this->guardtime;
@@ -751,7 +751,7 @@ class scheduler extends mvc_record_model {
         if ($this->groupmode != NOGROUPS) {
             $groups = groups_get_all_groups($this->cm->course, $studentid, $this->cm->groupingid);
             if ($groups) {
-                $groupids = array();
+                $groupids = [];
                 foreach ($groups as $group) {
                     $groupids[] = $group->id;
                 }
@@ -779,7 +779,7 @@ class scheduler extends mvc_record_model {
      * @return boolean
      */
     public function has_slots_for_student($studentid, $mustbeattended, $mustbeunattended) {
-        $params = array();
+        $params = [];
         $where = $this->student_in_slot_condition($params, $studentid, $mustbeattended, $mustbeunattended);
         $cnt = $this->count_slots($where, $params);
         return $cnt > 0;
@@ -810,7 +810,7 @@ class scheduler extends mvc_record_model {
                  WHERE s.schedulerid = :schedulerid
                        AND gm.groupid = :groupid
                        $attendcond";
-        $params = array('schedulerid' => $this->id, 'groupid' => $groupid);
+        $params = ['schedulerid' => $this->id, 'groupid' => $groupid];
         return $DB->count_records_sql($sql, $params) > 0;
     }
 
@@ -823,7 +823,7 @@ class scheduler extends mvc_record_model {
      */
     public function get_slots_without_appointment($teacherid = 0) {
         $wherecond = '('.$this->appointment_count_query().' = 0)';
-        $params = array();
+        $params = [];
         if ($teacherid > 0) {
             list($twhere, $params) = $this->slots_for_teacher_cond($teacherid, 0, false);
             $wherecond .= " AND $twhere";
@@ -841,8 +841,8 @@ class scheduler extends mvc_record_model {
      * @return mixed SQL condition and parameters
      */
     protected function slots_for_teacher_cond($teacherid, $groupid, $timerange) {
-        $wheres = array();
-        $params = array();
+        $wheres = [];
+        $params = [];
         if ($teacherid > 0) {
             $wheres[] = "teacherid = :tid";
             $params['tid'] = $teacherid;
@@ -857,7 +857,7 @@ class scheduler extends mvc_record_model {
             $wheres[] = "s.starttime >= ".strtotime('now');
         }
         $where = implode(" AND ", $wheres);
-        return array($where, $params);
+        return [$where, $params];
     }
 
     /**
@@ -921,7 +921,7 @@ class scheduler extends mvc_record_model {
                            $others = SCHEDULER_SELF, $excludeslot = 0) {
         global $DB;
 
-        $params = array();
+        $params = [];
 
         $slotscope = ($excludeslot == 0) ? "" : "sl.id != :excludeslot AND ";
         $params['excludeslot'] = $excludeslot;
@@ -988,11 +988,11 @@ class scheduler extends mvc_record_model {
     public function get_slot_appointment($appointmentid) {
         global $DB;
 
-        $slotid = $DB->get_field('scheduler_appointment', 'slotid', array('id' => $appointmentid));
+        $slotid = $DB->get_field('scheduler_appointment', 'slotid', ['id' => $appointmentid]);
         $slot = $this->get_slot($slotid);
         $app = $slot->get_appointment($appointmentid);
 
-        return array($slot, $app);
+        return [$slot, $app];
     }
 
     /**
@@ -1011,15 +1011,15 @@ class scheduler extends mvc_record_model {
                        AND s.id = a.slotid
                        AND a.studentid = :studid
               ORDER BY s.starttime";
-        $params = array('schedulerid' => $this->id, 'studid' => $studentid);
+        $params = ['schedulerid' => $this->id, 'studid' => $studentid];
 
         $slotrecs = $DB->get_records_sql($sql, $params);
 
-        $appointments = array();
+        $appointments = [];
         foreach ($slotrecs as $rec) {
             $slot = new slot($this);
             $slot->load_record($rec);
-            $appointrec = $DB->get_record('scheduler_appointment', array('id' => $rec->appointmentid), '*', MUST_EXIST);
+            $appointrec = $DB->get_record('scheduler_appointment', ['id' => $rec->appointmentid], '*', MUST_EXIST);
             $appointment = new appointment($slot);
             $appointment->load_record($appointrec);
             $appointments[] = $appointment;
@@ -1059,7 +1059,7 @@ class scheduler extends mvc_record_model {
         } else if ($includechangeable) {
             $sql .= ' AND (s.starttime <= :cutofftime OR a.attended = 1)';
         }
-        $params = array('schedulerid' => $this->id, 'studentid' => $studentid, 'cutofftime' => time() + $this->guardtime);
+        $params = ['schedulerid' => $this->id, 'studentid' => $studentid, 'cutofftime' => time() + $this->guardtime];
 
         $booked = $DB->count_records_sql($sql, $params);
         $allowed = $this->maxbookings;
@@ -1085,7 +1085,7 @@ class scheduler extends mvc_record_model {
                   FROM {scheduler_slots} s, {user} u
                  WHERE s.teacherid = u.id
                        AND schedulerid = ?";
-        $teachers = $DB->get_records_sql($sql, array($this->id));
+        $teachers = $DB->get_records_sql($sql, [$this->id]);
         return $teachers;
     }
 
@@ -1111,7 +1111,7 @@ class scheduler extends mvc_record_model {
             $groupids = 0;
         }
 
-        $users = array();
+        $users = [];
         if (is_integer($groupids)) {
             $users = get_enrolled_users($this->get_context(), $capability, $groupids, 'u.*', null, 0, 0, true);
 
@@ -1185,7 +1185,7 @@ class scheduler extends mvc_record_model {
         if (($cutoff > 0 && count($studs) > $cutoff) || count($studs) == 0) {
             return count($studs);
         }
-        $schedstuds = array();
+        $schedstuds = [];
         foreach ($studs as $stud) {
             $include = false;
             if ($this->allows_unlimited_bookings()) {
@@ -1210,7 +1210,7 @@ class scheduler extends mvc_record_model {
     public function delete_appointment($appointmentid) {
         global $DB;
 
-        if (!$oldrecord = $DB->get_record('scheduler_appointment', array('id' => $appointmentid))) {
+        if (!$oldrecord = $DB->get_record('scheduler_appointment', ['id' => $appointmentid])) {
             return;
         }
 
@@ -1238,7 +1238,7 @@ class scheduler extends mvc_record_model {
                           WHERE a.studentid IS NULL
                             AND starttime < ?";
         $now = time();
-        $todelete = $DB->get_records_sql($sql, array($now), 0, 1000);
+        $todelete = $DB->get_records_sql($sql, [$now], 0, 1000);
         if ($todelete) {
             list($usql, $params) = $DB->get_in_or_equal(array_keys($todelete));
             $DB->delete_records_select('scheduler_slots', " id $usql ", $params);
