@@ -83,7 +83,7 @@ class mvc_child_list {
         $this->childtable = $childtable;
         $this->childfactory = $factory;
         $this->parentmodel = $parent;
-        $this->childrenfordeletion = array();
+        $this->childrenfordeletion = [];
     }
 
     /**
@@ -103,10 +103,10 @@ class mvc_child_list {
             return; // Children already loaded.
         } else if (!$this->get_parent_id()) {
             // Parent ID is invalid - not yet stored.
-            $this->children = array();
+            $this->children = [];
         } else {
-            $this->children = array();
-            $childrecs = $DB->get_records($this->childtable, array($this->childfield => $this->get_parent_id()));
+            $this->children = [];
+            $childrecs = $DB->get_records($this->childtable, [$this->childfield => $this->get_parent_id()]);
             $cnt = 0;
             foreach ($childrecs as $rec) {
                 $app = $this->childfactory->create_child_from_record($rec, $this->parentmodel);
@@ -157,7 +157,7 @@ class mvc_child_list {
         } else if (!$this->get_parent_id()) {
             return 0; // No valid parent.
         } else {
-            $cnt = $DB->count_records($this->childtable, array($this->childfield => $this->get_parent_id()));
+            $cnt = $DB->count_records($this->childtable, [$this->childfield => $this->get_parent_id()]);
             $this->childcount = $cnt;
             return $cnt;
         }
@@ -175,7 +175,7 @@ class mvc_child_list {
         foreach ($this->childrenfordeletion as $delchild) {
             $delchild->delete();
         }
-        $this->childrenfordeletion = array();
+        $this->childrenfordeletion = [];
     }
 
     /**

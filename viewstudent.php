@@ -32,16 +32,16 @@ $studentid = $appointment->studentid;
 
 $permissions->ensure($permissions->can_see_appointment($appointment));
 
-$urlparas = array('what' => 'viewstudent',
+$urlparas = ['what' => 'viewstudent',
     'id' => $scheduler->cmid,
     'appointmentid' => $appointmentid,
-    'course' => $scheduler->courseid);
+    'course' => $scheduler->courseid, ];
 $taburl = new moodle_url('/mod/scheduler/view.php', $urlparas);
 $PAGE->set_url($taburl);
 
 $appts = $scheduler->get_appointments_for_student($studentid);
 
-$pages = array('thisappointment');
+$pages = ['thisappointment'];
 if ($slot->get_appointment_count() > 1) {
     $pages[] = 'otherstudents';
 }
@@ -57,8 +57,8 @@ if (!in_array($subpage, $pages) ) {
 if ($subpage == 'thisappointment') {
     require_once($CFG->dirroot.'/mod/scheduler/appointmentforms.php');
 
-    $actionurl = new moodle_url($taburl, array('page' => 'thisappointment'));
-    $returnurl = new moodle_url($taburl, array('page' => 'thisappointment'));
+    $actionurl = new moodle_url($taburl, ['page' => 'thisappointment']);
+    $returnurl = new moodle_url($taburl, ['page' => 'thisappointment']);
 
     $distribute = ($slot->get_appointment_count() > 1);
     $gradeedit = $permissions->can_edit_grade($appointment);
@@ -77,16 +77,16 @@ echo $output->header();
 
 // Print user summary.
 
-scheduler_print_user($DB->get_record('user', array('id' => $appointment->studentid)), $course);
+scheduler_print_user($DB->get_record('user', ['id' => $appointment->studentid]), $course);
 
 // Print tabs.
-$tabrows = array();
-$row  = array();
+$tabrows = [];
+$row  = [];
 
 if (count($pages) > 1) {
     foreach ($pages as $tabpage) {
         $tabname = get_string('tab-'.$tabpage, 'scheduler');
-        $row[] = new tabobject($tabpage, new moodle_url($taburl, array('subpage' => $tabpage)), $tabname);
+        $row[] = new tabobject($tabpage, new moodle_url($taburl, ['subpage' => $tabpage]), $tabname);
     }
     $tabrows[] = $row;
     print_tabs($tabrows, $subpage);
@@ -108,7 +108,7 @@ if ($subpage == 'thisappointment') {
 } else if ($subpage == 'otherappointments') {
     // Print table of other appointments of the same student.
 
-    $studenturl = new moodle_url($taburl, array('page' => 'thisappointment'));
+    $studenturl = new moodle_url($taburl, ['page' => 'thisappointment']);
     $table = new scheduler_slot_table($scheduler, true, $studenturl);
     $table->showattended = true;
     $table->showteachernotes = true;
@@ -133,7 +133,7 @@ if ($subpage == 'thisappointment') {
     $ai = scheduler_appointment_info::make_from_slot($slot, false);
     echo $output->render($ai);
 
-    $studenturl = new moodle_url($taburl, array('page' => 'thisappointment'));
+    $studenturl = new moodle_url($taburl, ['page' => 'thisappointment']);
     $table = new scheduler_slot_table($scheduler, true, $studenturl);
     $table->showattended = true;
     $table->showslot = false;
@@ -148,6 +148,6 @@ if ($subpage == 'thisappointment') {
     echo $output->render($table);
 }
 
-echo $output->continue_button(new moodle_url('/mod/scheduler/view.php', array('id' => $scheduler->cmid)));
+echo $output->continue_button(new moodle_url('/mod/scheduler/view.php', ['id' => $scheduler->cmid]));
 echo $output->footer($course);
 exit;

@@ -44,7 +44,7 @@ class slot_deleted extends slot_base {
      */
     public static function create_from_slot(\mod_scheduler\model\slot $slot, $action) {
         $data = self::base_data($slot);
-        $data['other'] = array('action' => $action);
+        $data['other'] = ['action' => $action];
         $event = self::create($data);
         $event->set_slot($slot);
         return $event;

@@ -37,7 +37,7 @@ class restore_scheduler_activity_structure_step extends restore_activity_structu
      */
     protected function define_structure() {
 
-        $paths = array();
+        $paths = [];
         $userinfo = $this->get_setting_value('userinfo');
 
         $scheduler = new restore_path_element('scheduler', '/activity/scheduler');

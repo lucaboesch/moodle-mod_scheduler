@@ -58,7 +58,7 @@ abstract class mvc_record_model extends mvc_model {
      */
     public function load($id) {
         global $DB;
-        $rec = $DB->get_record($this->get_table(), array('id' => $id), '*', MUST_EXIST);
+        $rec = $DB->get_record($this->get_table(), ['id' => $id], '*', MUST_EXIST);
         $this->data = $rec;
     }
 
@@ -174,7 +174,7 @@ abstract class mvc_record_model extends mvc_model {
 
         $id = $this->get_id();
         if ($id != 0) {
-            $DB->delete_records($this->get_table(), array('id' => $id));
+            $DB->delete_records($this->get_table(), ['id' => $id]);
         }
     }
 

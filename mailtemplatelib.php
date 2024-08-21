@@ -22,8 +22,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use \mod_scheduler\model\scheduler;
-use \mod_scheduler\model\slot;
+use mod_scheduler\model\scheduler;
+use mod_scheduler\model\slot;
 
 /**
  * Message functionality for scheduler module
@@ -71,7 +71,7 @@ class scheduler_messenger {
      *
      */
     public static function compile_mail_template($template, $format, $parameters, $module = 'scheduler', $lang = null) {
-        $params = array ();
+        $params = [];
         foreach ($parameters as $key => $value) {
             $params[strtolower($key)] = $value;
         }
@@ -109,13 +109,13 @@ class scheduler_messenger {
 
         $lang = self::get_message_language($recipient, $course);
 
-        $defaultvars = array (
+        $defaultvars = [
                 'SITE' => $SITE->fullname,
                 'SITE_SHORT' => $SITE->shortname,
                 'SITE_URL' => $CFG->wwwroot,
                 'SENDER' => fullname ( $sender ),
-                'RECIPIENT' => fullname ( $recipient )
-        );
+                'RECIPIENT' => fullname ( $recipient ),
+        ];
 
         if ($course) {
             $defaultvars['COURSE_SHORT'] = format_string($course->shortname);
@@ -167,7 +167,7 @@ class scheduler_messenger {
 
         $tz = core_date::get_user_timezone($recipient);
 
-        $vars = array();
+        $vars = [];
 
         if ($scheduler) {
             $vars['MODULE']     = format_string($scheduler->name);

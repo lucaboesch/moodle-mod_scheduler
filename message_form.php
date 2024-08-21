@@ -62,7 +62,7 @@ class scheduler_message_form extends moodleform {
         $mform = $this->_form;
 
         // Select users to sent the message to.
-        $checkboxes = array();
+        $checkboxes = [];
         $recipients = $this->_customdata['recipients'];
         foreach ($recipients as $recipient) {
             $inputid = 'recipient['.$recipient->id.']';
@@ -73,7 +73,7 @@ class scheduler_message_form extends moodleform {
         $mform->addGroup($checkboxes, 'recipients', get_string('recipients', 'scheduler'), null, false);
 
         if (get_config('mod_scheduler', 'showemailplain')) {
-            $maillist = array();
+            $maillist = [];
             foreach ($recipients as $recipient) {
                 $maillist[] = trim($recipient->email);
             }
@@ -84,7 +84,7 @@ class scheduler_message_form extends moodleform {
         $mform->addElement('selectyesno', 'copytomyself', get_string('copytomyself', 'scheduler'));
         $mform->setDefault('copytomyself', true);
 
-        $mform->addElement('text', 'subject', get_string('messagesubject', 'scheduler'), array('size' => '60'));
+        $mform->addElement('text', 'subject', get_string('messagesubject', 'scheduler'), ['size' => '60']);
         $mform->setType('subject', PARAM_TEXT);
         $mform->addRule('subject', null, 'required');
         if (isset($this->_customdata['subject'])) {
@@ -92,16 +92,16 @@ class scheduler_message_form extends moodleform {
         }
 
         $bodyedit = $mform->addElement('editor', 'body', get_string('messagebody', 'scheduler'),
-                                       array('rows' => 15, 'columns' => 60), array('collapsed' => true));
+                                       ['rows' => 15, 'columns' => 60], ['collapsed' => true]);
         $mform->setType('body', PARAM_RAW); // Must be PARAM_RAW for rich text editor content.
         if (isset($this->_customdata['body'])) {
-            $bodyedit->setValue(array('text' => $this->_customdata['body']));
+            $bodyedit->setValue(['text' => $this->_customdata['body']]);
         }
 
-        $buttonarray = array();
+        $buttonarray = [];
         $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('sendmessage', 'scheduler'));
         $buttonarray[] = $mform->createElement('cancel');
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
 
     }
 

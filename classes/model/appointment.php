@@ -114,7 +114,7 @@ class appointment extends mvc_child_record_model {
     public function get_student() {
         global $DB;
         if ($this->data->studentid) {
-            return $DB->get_record('user', array('id' => $this->data->studentid), '*', MUST_EXIST);
+            return $DB->get_record('user', ['id' => $this->data->studentid], '*', MUST_EXIST);
         } else {
             return null;
         }

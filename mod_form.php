@@ -49,7 +49,7 @@ class mod_scheduler_mod_form extends moodleform_mod {
         // General introduction.
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        $mform->addElement('text', 'name', get_string('name'), array('size' => '64'));
+        $mform->addElement('text', 'name', get_string('name'), ['size' => '64']);
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
@@ -64,15 +64,15 @@ class mod_scheduler_mod_form extends moodleform_mod {
         $mform->addElement('header', 'optionhdr', get_string('options', 'scheduler'));
         $mform->setExpanded('optionhdr');
 
-        $mform->addElement('text', 'staffrolename', get_string('staffrolename', 'scheduler'), array('size' => '48'));
+        $mform->addElement('text', 'staffrolename', get_string('staffrolename', 'scheduler'), ['size' => '48']);
         $mform->setType('staffrolename', PARAM_TEXT);
         $mform->addRule('staffrolename', get_string('error'), 'maxlength', 255);
         $mform->addHelpButton('staffrolename', 'staffrolename', 'scheduler');
 
-        $modegroup = array();
+        $modegroup = [];
         $modegroup[] = $mform->createElement('static', 'modeintro', '', get_string('modeintro', 'scheduler'));
 
-        $maxbookoptions = array();
+        $maxbookoptions = [];
         $maxbookoptions['0'] = get_string('unlimited', 'scheduler');
         for ($i = 1; $i <= 10; $i++) {
             $maxbookoptions[(string)$i] = $i;
@@ -91,10 +91,10 @@ class mod_scheduler_mod_form extends moodleform_mod {
         $mform->addHelpButton('modegrp', 'appointmentmode', 'scheduler');
 
         if (get_config('mod_scheduler', 'groupscheduling')) {
-            $selopt = array(
+            $selopt = [
                             -1 => get_string('no'),
-                             0 => get_string('yesallgroups', 'scheduler')
-                           );
+                             0 => get_string('yesallgroups', 'scheduler'),
+                           ];
             $groupings = groups_get_all_groupings($COURSE->id);
             foreach ($groupings as $grouping) {
                 $selopt[$grouping->id] = get_string('yesingrouping', 'scheduler', $grouping->name);
@@ -104,10 +104,10 @@ class mod_scheduler_mod_form extends moodleform_mod {
             $mform->setDefault('bookingrouping', '-1');
         }
 
-        $mform->addElement('duration', 'guardtime', get_string('guardtime', 'scheduler'), array('optional' => true));
+        $mform->addElement('duration', 'guardtime', get_string('guardtime', 'scheduler'), ['optional' => true]);
         $mform->addHelpButton('guardtime', 'guardtime', 'scheduler');
 
-        $mform->addElement('text', 'defaultslotduration', get_string('defaultslotduration', 'scheduler'), array('size' => '2'));
+        $mform->addElement('text', 'defaultslotduration', get_string('defaultslotduration', 'scheduler'), ['size' => '2']);
         $mform->setType('defaultslotduration', PARAM_INT);
         $mform->addHelpButton('defaultslotduration', 'defaultslotduration', 'scheduler');
         $mform->setDefault('defaultslotduration', 15);
@@ -139,10 +139,10 @@ class mod_scheduler_mod_form extends moodleform_mod {
         $mform->addElement('selectyesno', 'usebookingform', get_string('usebookingform', 'scheduler'));
         $mform->addHelpButton('usebookingform', 'usebookingform', 'scheduler');
 
-        $this->editoroptions = array('trusttext' => true, 'maxfiles' => -1, 'maxbytes' => 0,
-                                     'context' => $this->context, 'collapsed' => true);
+        $this->editoroptions = ['trusttext' => true, 'maxfiles' => -1, 'maxbytes' => 0,
+                                     'context' => $this->context, 'collapsed' => true, ];
         $mform->addElement('editor', 'bookinginstructions_editor', get_string('bookinginstructions', 'scheduler'),
-                array('rows' => 3, 'columns' => 60), $this->editoroptions);
+                ['rows' => 3, 'columns' => 60], $this->editoroptions);
         $mform->setType('bookinginstructions', PARAM_RAW); // Must be PARAM_RAW for rich text editor content.
         $mform->disabledIf('bookinginstructions_editor', 'usebookingform', 'eq', '0');
         $mform->addHelpButton('bookinginstructions_editor', 'bookinginstructions', 'scheduler');
@@ -155,9 +155,9 @@ class mod_scheduler_mod_form extends moodleform_mod {
         $mform->disabledIf('usestudentnotes', 'usebookingform', 'eq', '0');
         $mform->addHelpButton('usestudentnotes', 'usestudentnotes', 'scheduler');
 
-        $uploadgroup = array();
+        $uploadgroup = [];
 
-        $filechoices = array();
+        $filechoices = [];
         for ($i = 0; $i <= get_config('mod_scheduler', 'uploadmaxfiles'); $i++) {
             $filechoices[$i] = $i;
         }

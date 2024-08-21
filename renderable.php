@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use \mod_scheduler\model\scheduler;
-use \mod_scheduler\model\slot;
-use \mod_scheduler\model\appointment;
+use mod_scheduler\model\scheduler;
+use mod_scheduler\model\slot;
+use mod_scheduler\model\appointment;
 
 /**
  * This class represents a table of slots associated with one student
@@ -37,7 +37,7 @@ use \mod_scheduler\model\appointment;
 class scheduler_slot_table implements renderable {
 
     /** @var array list of slots in this table */
-    public $slots = array();
+    public $slots = [];
 
     /** @var scheduler the scheduler that the slots are in */
     public $scheduler;
@@ -143,7 +143,7 @@ class scheduler_slot_table implements renderable {
 class scheduler_student_list implements renderable {
 
     /** @var array list of students to be displayed */
-    public $students = array();
+    public $students = [];
 
     /** @var scheduler the scheduler in whose context the list is */
     public $scheduler;
@@ -232,7 +232,7 @@ class scheduler_slot_booker implements renderable {
     /**
      * @var array list of slots to be displayed
      */
-    public $slots = array();
+    public $slots = [];
 
     /**
      * @var scheduler scheduler in whose context the list is
@@ -302,12 +302,12 @@ class scheduler_command_bar implements renderable {
     /**
      * @var array list of drop-down menus in the command bar
      */
-    public $menus = array();
+    public $menus = [];
 
     /**
      * @var array list of action_link objects used in the menu
      */
-    public $linkactions = array();
+    public $linkactions = [];
 
     /**
      * @var string title of the menu
@@ -338,8 +338,8 @@ class scheduler_command_bar implements renderable {
      */
     public function action_link(moodle_url $url, $titlekey, $iconkey, $confirmkey = null, $id = null) {
         $title = get_string($titlekey, 'scheduler');
-        $pix = new pix_icon($iconkey, $title, 'moodle', array('class' => 'iconsmall', 'title' => ''));
-        $attributes = array();
+        $pix = new pix_icon($iconkey, $title, 'moodle', ['class' => 'iconsmall', 'title' => '']);
+        $attributes = [];
         if ($id) {
             $attributes['id'] = $id;
         }
@@ -363,8 +363,8 @@ class scheduler_command_bar implements renderable {
      */
     public function action_menu_link(moodle_url $url, $titlekey, $iconkey, $confirmkey = null, $id = null) {
         $title = get_string($titlekey, 'scheduler');
-        $pix = new pix_icon($iconkey, $title, 'moodle', array('class' => 'iconsmall', 'title' => ''));
-        $attributes = array();
+        $pix = new pix_icon($iconkey, $title, 'moodle', ['class' => 'iconsmall', 'title' => '']);
+        $attributes = [];
         if ($id) {
             $attributes['id'] = $id;
         }
@@ -395,7 +395,7 @@ class scheduler_slot_manager implements renderable {
     /**
      * @var array list of slots
      */
-    public $slots = array();
+    public $slots = [];
 
     /**
      * @var scheduler scheduler in whose context the list is
@@ -460,7 +460,7 @@ class scheduler_scheduling_list implements renderable {
     /**
      * @var array lines in the list
      */
-    public $lines = array();
+    public $lines = [];
 
     /**
      * @var scheduler the scheduler in whose context the list is
@@ -566,7 +566,7 @@ class scheduler_conflict_list implements renderable {
     /**
      * @var array list of conflicts
      */
-    public $conflicts = array();
+    public $conflicts = [];
 
     /**
      * Add a conflict to the list.
@@ -688,7 +688,7 @@ class scheduler_appointment_info implements renderable {
         $info->appointment = $appointment;
         $info->scheduler = $slot->get_scheduler();
         $info->showslotinfo = true;
-        $info->showboookinginfo = true;
+        $info->showbookinginfo = true;
         $info->showstudentdata = $info->scheduler->uses_studentdata();
         $info->showresult   = true;
         $info->onstudentside = $onstudentside;
@@ -711,7 +711,7 @@ class scheduler_appointment_info implements renderable {
         $info->appointment = $appointment;
         $info->scheduler = $slot->get_scheduler();
         $info->showslotinfo = true;
-        $info->showboookinginfo = false;
+        $info->showbookinginfo = false;
         $info->showstudentdata = $info->scheduler->uses_studentdata();
         $info->showresult   = false;
         $info->onstudentside = false;

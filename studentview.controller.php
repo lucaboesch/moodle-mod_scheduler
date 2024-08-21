@@ -52,7 +52,7 @@ function scheduler_book_slot($scheduler, $slotid, $userid, $groupid, $mform, $fo
     }
 
     $requiredcapacity = 1;
-    $userstobook = array($userid);
+    $userstobook = [$userid];
     if ($groupid > 0) {
         if (!$scheduler->is_group_scheduling_enabled()) {
             throw new moodle_exception('error');
@@ -76,7 +76,7 @@ function scheduler_book_slot($scheduler, $slotid, $userid, $groupid, $mform, $fo
         $errormessage = get_string('selectedtoomany', 'scheduler', $bookinglimit);
     } else {
         // Validate our user ids.
-        $existingstudents = array();
+        $existingstudents = [];
         foreach ($slot->get_appointments() as $app) {
             $existingstudents[] = $app->studentid;
         }
@@ -115,8 +115,8 @@ function scheduler_book_slot($scheduler, $slotid, $userid, $groupid, $mform, $fo
 
         // Notify the teacher.
         if ($scheduler->allownotifications) {
-            $student = $DB->get_record('user', array('id' => $appointment->studentid), '*', MUST_EXIST);
-            $teacher = $DB->get_record('user', array('id' => $slot->teacherid), '*', MUST_EXIST);
+            $student = $DB->get_record('user', ['id' => $appointment->studentid], '*', MUST_EXIST);
+            $teacher = $DB->get_record('user', ['id' => $slot->teacherid], '*', MUST_EXIST);
             scheduler_messenger::send_slot_notification($slot, 'bookingnotification', 'applied',
                     $student, $teacher, $teacher, $student, $COURSE);
         }
@@ -126,7 +126,7 @@ function scheduler_book_slot($scheduler, $slotid, $userid, $groupid, $mform, $fo
 
 }
 
-$returnurlparas = array('id' => $cm->id);
+$returnurlparas = ['id' => $cm->id];
 if ($scheduler->is_group_scheduling_enabled()) {
     $returnurlparas['appointgroup'] = $appointgroup;
 }
@@ -144,7 +144,7 @@ if ($action == 'bookingform') {
     $slotid = required_param('slotid', PARAM_INT);
     $slot = $scheduler->get_slot($slotid);
 
-    $actionurl = new moodle_url($returnurl, array('what' => 'bookingform', 'slotid' => $slotid));
+    $actionurl = new moodle_url($returnurl, ['what' => 'bookingform', 'slotid' => $slotid]);
 
     $mform = new scheduler_booking_form($slot, $actionurl);
 
@@ -240,7 +240,7 @@ if ($action == 'editbooking') {
         throw new moodle_exception('nopermissions');
     }
 
-    $actionurl = new moodle_url($returnurl, array('what' => 'editbooking', 'appointmentid' => $appointmentid));
+    $actionurl = new moodle_url($returnurl, ['what' => 'editbooking', 'appointmentid' => $appointmentid]);
 
     $mform = new scheduler_booking_form($slot, $actionurl, true);
     $mform->set_data($mform->prepare_booking_data($appointment));
@@ -282,7 +282,7 @@ if ($action == 'cancelbooking') {
         throw new moodle_exception('nopermissions');
     }
 
-    $userstocancel = array($USER->id);
+    $userstocancel = [$USER->id];
     if ($appointgroup) {
         $userstocancel = array_keys($scheduler->get_available_students($appointgroup));
     }
@@ -293,8 +293,8 @@ if ($action == 'cancelbooking') {
 
             // Notify the teacher.
             if ($scheduler->allownotifications) {
-                $student = $DB->get_record('user', array('id' => $USER->id));
-                $teacher = $DB->get_record('user', array('id' => $slot->teacherid));
+                $student = $DB->get_record('user', ['id' => $USER->id]);
+                $teacher = $DB->get_record('user', ['id' => $slot->teacherid]);
                 scheduler_messenger::send_slot_notification($slot, 'bookingnotification', 'cancelled',
                                                             $student, $teacher, $teacher, $student, $COURSE);
             }
