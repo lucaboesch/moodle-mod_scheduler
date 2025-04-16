@@ -685,6 +685,7 @@ class mod_scheduler_renderer extends plugin_renderer_base {
      * @return string HTML
      */
     public function render_action_menu(action_menu $menu) {
+        global $CFG;
 
         // We don't want the class icon there!
         foreach ($menu->get_secondary_actions() as $action) {
@@ -697,6 +698,10 @@ class mod_scheduler_renderer extends plugin_renderer_base {
             return '';
         }
         $context = $menu->export_for_template($this);
+
+        if ($CFG->version > 2025041400) {
+            $context->primary->bs5 = "bs5";
+        }
 
         return $this->render_from_template('mod_scheduler/action_menu', $context);
     }
