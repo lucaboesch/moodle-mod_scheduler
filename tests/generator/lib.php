@@ -47,10 +47,10 @@ class mod_scheduler_generator extends testing_module_generator {
     /**
      * Create new scheduler module instance
      * @param array|stdClass $record
-     * @param array $options
+     * @param null|array $options
      * @return stdClass activity record with extra cmid field
      */
-    public function create_instance($record = null, array $options = null) {
+    public function create_instance($record = null, ?array $options = null) {
         global $CFG, $DB;
         require_once("$CFG->dirroot/mod/scheduler/lib.php");
 

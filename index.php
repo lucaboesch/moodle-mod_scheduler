@@ -28,6 +28,11 @@ require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 
 $id = required_param('id', PARAM_INT);   // Course id.
+
+if ($CFG->version > 2025041400) {
+    \core_courseformat\activityoverviewbase::redirect_to_overview_page($id, 'scheduler');
+}
+
 $course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
 
 $PAGE->set_url('/mod/scheduler/index.php', array('id' => $id));
