@@ -788,6 +788,37 @@ function mod_scheduler_core_calendar_provide_event_action(
 }
 
 /**
+ * Is the event visible?
+ *
+ * @param calendar_event $event
+ * @return bool Returns true if the event is visible to the current user, false otherwise.
+ */
+function mod_scheduler_core_calendar_is_event_visible(calendar_event $event) {
+    global $COURSE, $PAGE;
+
+    $calendarview = false;
+
+    // Calendar view detection.
+    $path = $PAGE->url->get_path();
+    $courseparam = 1;
+    $params = $PAGE->url->params();
+
+    if (!empty($params['course'])) {
+        $courseparam = $params['course'];
+    }
+    if ((strpos($path, '/calendar/') !== false) && ($courseparam == 1 || $courseparam == $event->courseid)) {
+        $calendarview = true;
+    }
+
+    // If the event does not belong to the currently viewed course,
+    // and we're not in calendar view it's not visible.
+    if (!(($COURSE->id === $event->courseid) || ($calendarview === true))) {
+        return false;
+    }
+    return null;
+}
+
+/**
  * Get icon mapping for font-awesome.
  *
  * @return  array
